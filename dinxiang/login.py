@@ -68,7 +68,7 @@ class Login:
         return r.json()['sid'], r.json()["y"]
 
     def get_data(self):
-        # 获取到data
+        # 获取到dat
         url = 'https://constid.dingxiang-inc.com/udid/c1?'
         param = '1714#X8m8KVRy8B0KKKIbfd9LrBVL06U40hFJdaN4XBd45NFbnbqjF8F4dyZ4BRNj0CN4dzN4BH94rVU4dOd4XKILz/UKHOV' \
                 '40yI4Xwd48bqb0hFJnBoYXX0yw4Lu74LmMvUkrXIXYZ6c9GE+SnNgmXXI8XojUMuR+zXz3MbRm8m7uV2su7rDtJpWEGpGYK4n9B' \
