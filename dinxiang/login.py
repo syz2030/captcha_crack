@@ -28,22 +28,37 @@ class Login:
             'Accept-Language': 'zh-CN,zh;q=0.9',
         }
         self.appid = ''
+        self.sample = ''
         self.data = ''
         self.c = '5fce3cf64HEMSwG7O7arufS3pzVARW2MoJa3i9O1'
-        self.sample = ''
         self.token = '6020E793FA3752A68A0D2B85FEF5091F439E165ADB40B7CC2CCEF541EA5550E30176A7D964BB8CAB7F50FDF23CF07' \
                      'F0F3965881D38A5CA0F1B78FC0E77163A06FBF34C5915CA412670CF06A57308C2F4'
+        self.sid = ''
+        self.y = ''
+        self.x = ''
+
+    def get_params(self):
+        # 获取params参数
+        '''
+        addParams =
+        url += (url.indexOf('?') == -1 ? '?': '&')
+        url += encodeURIComponent(name) + '=' + encodeURIComponent(value)
+        pass
+        '''
 
     def get_index(self):
-        url = 'https://passport.stage.yunshanmeicai.com/pc/site/index'
-        r = requests.get(url=url, headers=self.headers)
-        self.appid = re.findall(r"appId: \'(.*?)\',", r.content.decode())[0]
+        # 获取ak和sample参数
+        ak_url = 'https://passport.stage.yunshanmeicai.com/pc/site/index'
+        ak_response = requests.get(url=ak_url, headers=self.headers)
+        self.appid = re.findall(r"appId: \'(.*?)\',", ak_response.text)[0]
+        sample_url = 'https://passport.yunshanmeicai.com/dist/scripts/process.min.js? [sm]'
+        sample_response = requests.get(url=sample_url, headers=self.headers)
+        self.sample = re.findall(r"i=\"(.*?)\"", sample_response.text)[0]
+        print(self.appid, self.sample)
 
-        print(self.appid)
-
-    def get_c(self):
+    def get_sid(self):
+        # 获取sid和y值以及三张图片
         url = 'https://cap.dingxiang-inc.com/api/a'
-        # 获取sid
         params = {
             'w': '300',
             'h': '150',
@@ -68,7 +83,7 @@ class Login:
         return r.json()['sid'], r.json()["y"]
 
     def get_data(self):
-        # 获取到dat
+        # 获取到data
         url = 'https://constid.dingxiang-inc.com/udid/c1?'
         param = '1714#X8m8KVRy8B0KKKIbfd9LrBVL06U40hFJdaN4XBd45NFbnbqjF8F4dyZ4BRNj0CN4dzN4BH94rVU4dOd4XKILz/UKHOV' \
                 '40yI4Xwd48bqb0hFJnBoYXX0yw4Lu74LmMvUkrXIXYZ6c9GE+SnNgmXXI8XojUMuR+zXz3MbRm8m7uV2su7rDtJpWEGpGYK4n9B' \
@@ -86,26 +101,11 @@ class Login:
         print(r.content.decode())
         return r.json()['data']
 
-    def get_sign(self, code='135', password=''):
-        sample = 'ZWFmZDUxMGI5MDNhMjRiZmM2MjFkZGI3'
-        params = {
-            "bp": "Win32",
-            "credential": f"{{captcha={self.token + ':' + self.c}&password={password}&phone={code}&type=password}}",
-            "device_id": "d2d71b45aad7bb056efeae8ad5a89d09",
-            "os": "Windows 10",
-            "rs": "1536,864",
-            "ts": str(int(time.time() * 1000)),
-            "ua": str(self.headers['User-Agent']),
-        }
-        st = '{' + '&'.join([k + '=' + v for k, v in params.items()]) + '}'
-        md = md5(base64.encodebytes((st + sample).encode())).hexdigest()
-        print(md)
-        return md
-
     def get_token(self):
-        # token获取
+        # 完成验证码验证获取token
         url = 'https://cap.dingxiang-inc.com/api/v1'
-        sid, y = self.get_c()
+        self.sid, self.y = self.get_sid()
+        self.data = self.get_data()
         data = {
             # 'ac': '1786#X8XnXTgBGWLTuY3YXXOXR37cJDS3X3zcLHvwWBZRsIeigMuR/BFhIdUluvUt/BnToxiT3c3T3
             # lxTVxsig9Pi/MvwyWShoz1TbI2TgBF8/x3/LuURgBZt3x3wVZUTIJDcm8X18AbnULS+mrXmZXWXmIBFwggnX
@@ -127,22 +127,65 @@ class Login:
             # bbkJT97ITXXEd9BV6QGPDyM3XYsHDP4pdVQJR38XnQbW4dsHh97ITXXEd9MdJQMsDyM3XYsHDP4KdIQJR38X
             # nQbW45s4h97ITXXEd9MdmQdsDyM3XYsHDPJidyQJR38XnQbW4GsJt97ITXXEd9Md2QbFDyM3XYsHDF4AdVbJ
             # R38XnQbWbNGHw97ITXXEd9wdWQMFDyM3XYsHDFJEdIbJR38XnQbWbGk4R97IiXX27p9JnM//12xJnMr/=',
-            'ak': '85f04b56d0efac5cecb6fe15cca1439b',
-            'c': self.get_data(),
+            'ak': self.appid,
+            'c': self.data,
             'uid': '',
             'jsv': '1.4.5.1',
-            'sid': sid,
+            'sid': self.sid,
             'aid': 'dx' + '-' + str(int(time.time() * 1000)) + '-' + str(
                 random.randint(10000000, 99999999)) + '-' + '1',
             'x': '207',
-            'y': str(y)
+            'y': str(self.y)
         }
         print(data)
         r = requests.post(url=url, headers=self.headers, data=data)
         print(r.content.decode())
 
+    def login(self, phone, pwd):
+        login_url = 'https://passport.yunshanmeicai.com/pc/site/index'
+        data = {
+            "bp": "Win32",
+            "credential": f"{{captcha={self.token + ':' + self.c}&password={pwd}&phone={phone}&type=password}}",
+            "device_id": "41b27fa0a0b291156e406cab091bc6d0",
+            "os": "Windows 10",
+            "rs": "1920,1080",  # 分辨率
+            "ts": str(int(time.time() * 1000)),
+            "ua": str(self.headers['User-Agent']),
+        }
+        # 获取登录用的sign参数
+        sample = self.sample
+        st = '{' + '&'.join([k + '=' + v for k, v in data.items()]) + '}'
+        sign = md5(base64.encodebytes((st + sample).encode())).hexdigest()
+        data['sign'] = sign
+        data['credential'] = {
+            'phone': phone,
+            'password': pwd,
+            'captcha': self.token + ':' + self.c,
+            'type': 'password',
+        }
+        index_response = requests.post(url=login_url, headers=self.headers, data=data)
+        if index_response.status_code == 200:
+            cookies = index_response.cookies
+            return cookies
+
 
 if __name__ == '__main__':
     t = Login()
-    t.get_sign()
-    # t.get_index()
+    t.get_index()
+
+''''
+ua
+ty
+
+101100101011111
+101100100110111
+000000001101000
+
+101100101011111
+101100100110011
+000000001101100
+
+剩余三个参数破解
+ac、params、x
+ac和params同类、x距离
+'''
