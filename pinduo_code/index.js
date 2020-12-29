@@ -1,26 +1,16 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 // 创建应用实例
 const app = express();
 
 //初始屏幕数据
-var href_data = "https://youhui.pinduoduo.com/";
+var href_data = "https://youhui.pinduoduo.com/goods/goods-detail?goodsId=27982667388";
 var my_useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36";
-var my_host = "youhui.pinduoduo.com";
+var my_host = "https://youhui.pinduoduo.com/goods/goods-detail";
 var my_availHeight = 824;
 var my_availWidth = 1536;
 var cookie = "_nano_fp=XpEonqEaX5CylpTbXo_bYhDoy63lYdWcy4Jrd0Qh; api_uid=rBUUTF/SOb0UqxSyq7YWAg==";
 var cookie_nano_fp = "XpEonqEaX5CylpTbXo_bYhDoy63lYdWcy4Jrd0Qh";
-
-function my_arguments_h() {
-    var my_arguments_h = {
-        _2827c887a48a351a: false,
-        serverTime: Date.now()
-    };
-    return my_arguments_h;
-}
-
 
 var jsdom = require("jsdom");
 var dom = jsdom.JSDOM;
@@ -30,7 +20,7 @@ document.cookie = cookie;
 document.referrer = href_data;
 
 const o = function () {
-    return function (t, e, n) {
+    return function (t) {
         var e = {};
 
         function n(r) {
@@ -103,8 +93,7 @@ const o = function () {
             ,
             n.p = "",
             n(n.s = 6)
-    }
-    ([function (t, e) {
+    }([function (t, e) {
         t.exports = function (t) {
             return t.webpackPolyfill || (t.deprecate = function () {
             }
@@ -1006,8 +995,7 @@ const o = function () {
                                     et = window[h("0x21", "(X([")];
                                     continue;
                                 case "1":
-                                    // nt = h("0x22", "ui)S") in Z[D];
-                                    nt = false;
+                                    nt = h("0x22", "ui)S") in Z[D];
                                     continue;
                                 case "2":
                                     tt = window[h("0x23", "l*GI")];
@@ -1139,8 +1127,8 @@ const o = function () {
                     var ct = {};
                     ct[h("0x9d", "(X([")] = function () {
                         this[F] = {},
-                            this[F][N] = href_data,
-                            this[F][M] = ""
+                            this[F][N] = 'https://youhui.pinduoduo.com/',
+                            this[F][M] = Z[L][M]
                     }
                         ,
                         ct[h("0x9e", "krTJ")] = function () {
@@ -1315,7 +1303,7 @@ const o = function () {
                     pt[h("0xa8", "P!c2")] = function () {
                         var t, e;
                         this[F] = (t = a,
-                            e = Z[L][N] ? Z[L][N] : "",
+                            e = 'https://youhui.pinduoduo.com/',
                             t(e))
                     }
                         ,
@@ -1377,7 +1365,7 @@ const o = function () {
                     var gt = {};
                     gt[h("0xb3", "c6Bq")] = function () {
                         var t = h("0xb6", "3HI!");
-                        this[F] =  my_useragent
+                        this[F] = my_useragent
                     }
                         ,
                         gt[h("0xb7", "B4$K")] = function () {
@@ -1518,7 +1506,6 @@ const o = function () {
                         return []
                     }
 
-                    St_ = St;
                     function St() {
                         var t, e = {};
                         e[h("0xde", "tGHt")] = function (t) {
@@ -1615,7 +1602,7 @@ const o = function () {
                             }
                             ,
                         e[h("0x114", "4N]H")]("undefined" == typeof window ? "undefined" : i(window), e[h("0x115", "43d3")]) && (this[h("0x116", "YGdi")](t[S] || 879609302220),
-                            G = Date.now(),
+                            G = tt[w](),
                             e[h("0x117", "Ya61")](xt, G),
                             e[h("0x118", "dQAO")](Ot))
                     }
@@ -1640,7 +1627,7 @@ const o = function () {
                         }
                         ,
                         Et[h("0x119", ")uYb")][h("0x11a", "Ya61")] = function (t) {
-                            Q = Date.now(),
+                            Q = tt[w](),
                                 W = t
                         }
                         ,
@@ -1689,8 +1676,10 @@ const o = function () {
                     );
                     var jt = new Et;
                     e[h("0x132", "ui)S")] = function () {
-                        // var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
-                        var e = my_arguments_h();
+                        var t = {
+                            serverTime: Date.now(),
+                            _2827c887a48a351a: false
+                        };
                         return t[S] && jt[h("0x133", "ui)S")](t[S]),
                             jt
                     }
@@ -3780,6 +3769,7 @@ const o = function () {
     ])
 }
 
+
 // //定义http请求参数及返回
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -3798,14 +3788,17 @@ app.get('/get_anti_content', function (req, res) {
     });
 
 });
-// // 监听8000端口并在运行成功后向控制台输入服务器启动成功！
-// const server = app.listen(8000, function () {
-//     let host = server.address().address;
-//     let port = server.address().port;
-//     console.log(
-//         "node服务启动，监听地址为: http://%s:%s", host, port
-//     )
-// });
+// 监听8000端口并在运行成功后向控制台输入服务器启动成功！
+const server = app.listen(8000, function () {
+    let host = server.address().address;
+    let port = server.address().port;
+    console.log(
+        "node服务启动，监听地址为: http://%s:%s", host, port
+    )
+});
 
-let anti_result = o()()["messagePackSync"]();
-console.log(anti_result)
+// let anti_result = o()()["messagePackSync"]();
+// console.log(anti_result)
+
+
+
