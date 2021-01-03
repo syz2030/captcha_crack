@@ -1,23 +1,16 @@
-// const express = require('express');
-// const bodyParser = require('body-parser');
-// 创建应用实例
-// const app = express();
-
+js = '''
 //初始屏幕数据
 var href_data = "https://youhui.pinduoduo.com/goods/goods-detail?goodsId=27982667388";
 var my_useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36";
 var my_host = "https://youhui.pinduoduo.com/goods/goods-detail";
 var my_availHeight = 824;
 var my_availWidth = 1536;
-// var cookie = "_nano_fp=XpEonqEaX5CylpTbXo_bYhDoy63lYdWcy4Jrd0Qh; api_uid=rBUUTF/SOb0UqxSyq7YWAg==";
 var cookie_nano_fp = "XpEonqEaX5CylpTbXo_bYhDoy63lYdWcy4Jrd0Qh";
 
 var jsdom = require("jsdom");
 var dom = jsdom.JSDOM;
 var window = new dom('<!DOCTYPE html><p>Hello world</p>').window;
-// document = window.document;
-// document.cookie = cookie;
-// document.referrer = href_data;
+
 
 
 const o = function () {
@@ -1583,7 +1576,6 @@ const o = function () {
                             , f = [][e[h("0x108", "P!c2")]][h("0x109", "dQAO")](c, function (t) {
                             return String[e[h("0x10a", "b]KU")]](t)
                         });
-                        anti_result = e[h("0x10b", "Fvsl")](e[h("0x10c", "nBw!")], s[e[h("0x10d", "krTJ")]](f[h("0x10e", "B4$K")]("")));
                         return e[h("0x10b", "Fvsl")](e[h("0x10c", "nBw!")], s[e[h("0x10d", "krTJ")]](f[h("0x10e", "B4$K")]("")))
                     }
 
@@ -3772,35 +3764,8 @@ const o = function () {
 }
 
 
-// //定义http请求参数及返回
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: true}));
-// app.get('/get_anti_content', function (req, res) {
-//     let anti_result = o()()["messagePackSync"]();
-//     var myres = res;
-//     anti_result.then(function (res) {
-//         console.log(
-//             "获取anti_content值为: %s", res
-//         );
-//         myres.json(
-//             {
-//                 anti_result: res
-//             }
-//         )
-//     });
-//
-// });
-// 监听8000端口并在运行成功后向控制台输入服务器启动成功！
-// const server = app.listen(8000, function () {
-//     let host = server.address().address;
-//     let port = server.address().port;
-//     console.log(
-//         "node服务启动，监听地址为: http://%s:%s", host, port
-//     )
-// });
-
-o()()["messagePackSync"]();
-console.log(anti_result)
+let anti_result = o()()["messagePackSync"]();
 
 
+'''
 
