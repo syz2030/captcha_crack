@@ -3798,9 +3798,12 @@ const o = function () {
 //         "node服务启动，监听地址为: http://%s:%s", host, port
 //     )
 // });
+fx = function () {
+    o()()["messagePackSync"]();
+    return anti_result
+}
 
-o()()["messagePackSync"]();
-console.log(anti_result)
+
 
 
 
